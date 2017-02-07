@@ -13,9 +13,16 @@ def sigint_handler(signum, frame):
     print "CTRL+C captured, exiting."
     v.clear()
     v.ser.close()
-    sys.exit()
+    sys.exit(signum)
+
+def sigterm_handler(signum, frame):
+    print "SIGTERM received, exiting."
+    v.clear()
+    v.ser.close()
+    sys.exit(0) # SIGTERM (15) is reported as an error by systemctl
 
 signal.signal(signal.SIGINT, sigint_handler)
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 def main():
     v.clear()
@@ -23,6 +30,7 @@ def main():
     v.setBrightness(25)
     v.setDisplay()
     v.write("Servers: ...")
+    print "Nanny started"
     while True:
         ok = 0
         failed = []
@@ -34,7 +42,7 @@ def main():
         v.write("{}/{}".format(ok, len(serveurs)), x=9, y=0)
         if len(failed):
             v.write("Failed: {}".format(failed), x=0, y=1)
-        time.sleep(9)
+        time.sleep(30)
 
 if __name__ == "__main__":
     main()
