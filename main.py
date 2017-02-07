@@ -1,18 +1,41 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import signal
-import time
- 
+import signal, time, sys
+
+from vfd import Vfd
+from ping import check_ping
+
+v = Vfd()
+serveurs = ("bbbforum", "bbbdata", "odroid", "skymule")
+
 def sigint_handler(signum, frame):
-    print 'Stop pressing the CTRL+C!'
-          
+    print "CTRL+C captured, exiting."
+    v.clear()
+    v.ser.close()
+    sys.exit()
+
 signal.signal(signal.SIGINT, sigint_handler)
-           
+
 def main():
+    v.clear()
+    v.setLineWrap(True)
+    v.setBrightness(25)
+    v.setDisplay()
+    v.write("Servers: ...")
     while True:
-        print '.'
-        time.sleep(1)
-                                       
+        ok = 0
+        failed = []
+        for s in serveurs:
+            if check_ping(s):
+                ok += 1
+            else:
+                failed.append(s)
+        v.write("{}/{}".format(ok, len(serveurs)), x=9, y=0)
+        if len(failed):
+            v.write("Failed: {}".format(failed), x=0, y=1)
+        time.sleep(9)
+
 if __name__ == "__main__":
     main()
+
