@@ -127,11 +127,11 @@ class Vfd:
         else:
             self.ser.write("\xFE\xC3" + str(int(out)) + "0")
 
-    def setDisplay(self, state=True, time=0):
+    def setDisplay(self, state=True):
         if not self.remember:
             self.setRemember(True)
         if state:
-            self.ser.write("\xFE\x42" + self.coord[time])
+            self.ser.write("\xFE\x42\x00")
         else:
             self.ser.write("\xFE\x46")
 
