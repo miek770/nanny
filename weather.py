@@ -19,9 +19,16 @@ class Weather:
         if update:
             self.get_obs()
         w = self.obs.get_weather()
-        return w.get_temperature("celsius")["temp"]
+        return w.get_temperature("celsius")["temp"], w.get_status()
+
+    def get_id(self):
+        self.reg = self.owm.city_id_registry()
+        print self.reg.ids_for(self.location)
+        print self.reg.locations_for(self.location)
 
 if __name__ == "__main__":
     w = Weather()
     print "Temp.: {} C".format(w.get_temp())
-
+    we = w.obs.get_weather()
+    print we.get_temperature()
+    w.get_id()

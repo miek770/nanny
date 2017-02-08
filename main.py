@@ -33,10 +33,11 @@ def main():
     v.write("Servers: ...", x=0, y=0)
     v.write("Failed: ...", x=0, y=1)
 
-    w = Weather()
-    last_weather = datetime.datetime.now()
-    temp = w.get_temp()
-    interval = datetime.timedelta(15*60)
+#    w = Weather()
+#    last_weather = datetime.datetime.now()
+#    temp = w.get_temp()
+#    interval = datetime.timedelta(15*60)
+#    v.write("Temp.: ...", x=0, y=2)
 
     print "Nanny started"
     while True:
@@ -58,6 +59,13 @@ def main():
                     v.write(",")
         else:
             v.write("N/A")
+
+#        if w.owm.is_API_online():
+#            v.erase(x=7, y=2, l=12)
+#            if datetime.datetime.now() > (last_weather + interval):
+#                temp = w.get_temp(update=True)
+#                last_weather = datetime.datetime.now()
+#            v.write("{} C, {}".format(temp[0], temp[1]), x=7, y=2)
 
         time.sleep(30)
 
