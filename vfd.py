@@ -35,13 +35,21 @@ class Vfd:
         self.blink(False)
 
     # Écrit le texte à l'endroit spécifié
-    def write(self, message, x=0, y=0):
-        l = len(message)
-        self.move(x+l, y)
+    def write(self, message, x=None, y=None):
+#        l = len(message)
+#        self.move(x+l, y)
         # Efface le texte actuel
+#        for i in range(l):
+#            self.backspace()
+#        self.ser.write(message[:l])
+        if x is not None and y is not None:
+            self.move(x, y)
+        self.ser.write(message)
+
+    def erase(self, x, y, l):
+        self.move(x+l, y)
         for i in range(l):
-            self.backspace()
-        self.ser.write(message[:l])
+            self.ser.write("\x08")
 
     # Écrit une nouvelle ligne au complet
     def writeLine(self, line, message):
