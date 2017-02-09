@@ -5,10 +5,12 @@ import signal, time, sys, datetime
 
 from vfd import Vfd
 from ping import check_ping
-from weather import Weather
+#from weather import Weather
+from acmepins import GPIO
 
 v = Vfd()
-servers = (("bbbforum", "bf"), ("bbbdata", "bd"), ("odroid", "od"), ("skymule", "sm"))
+dim_delay = "\x01" # 1 minute delay
+print "Initiated VFD"
 
 def sigint_handler(signum, frame):
     print "CTRL+C captured, exiting."
@@ -24,12 +26,22 @@ def sigterm_handler(signum, frame):
 
 signal.signal(signal.SIGINT, sigint_handler)
 signal.signal(signal.SIGTERM, sigterm_handler)
+print "Initiated signals handlers"
+
+servers = (("bbbforum", "bf"), ("bbbdata", "bd"), ("odroid", "od"), ("skymule", "sm"))
+
+#def pb_handler():
+#    v.setDisplay(duration=dim_delay)
+
+pb = GPIO("PC17", "INPUT") # on board PB
+#pb.set_edge("falling", pb_handler)
+#print "Started PB edge detection"
 
 def main():
     v.clear()
     v.setLineWrap(False)
     v.setBrightness(25)
-    v.setDisplay()
+    v.setDisplay(duration=dim_delay)
     v.write("Servers: ...", x=0, y=0)
     v.write("Failed: ...", x=0, y=1)
 
@@ -39,26 +51,34 @@ def main():
 #    interval = datetime.timedelta(15*60)
 #    v.write("Temp.: ...", x=0, y=2)
 
-    print "Nanny started"
-    while True:
-        ok = 0
-        failed = []
-        for s in servers:
-            if check_ping(s[0]):
-                ok += 1
-            else:
-                failed.append(s[1])
-        v.write("{}/{}".format(ok, len(servers)), x=9, y=0)
-        v.erase(x=8, y=1, l=len(servers)*3-1)
-        v.move(x=8, y=1)
+    i = 0
+    print "Nanny started, entering loop"
 
-        if len(failed):
-            for x in range(len(failed)):
-                v.write(failed[x])
-                if (x+1) < len(failed):
-                    v.write(",")
-        else:
-            v.write("N/A")
+    while True:
+        i += 1
+        if i >= 300:
+            i = 0
+            ok = 0
+            failed = []
+
+            for s in servers:
+                if check_ping(s[0]):
+                    ok += 1
+                else:
+                    failed.append(s[1])
+
+            v.write("{}/{}".format(ok, len(servers)), x=9, y=0)
+            v.erase(x=8, y=1, l=len(servers)*3-1)
+            v.move(x=8, y=1)
+
+            if len(failed):
+#                v.setDisplay(duration=dim_delay)
+                for x in range(len(failed)):
+                    v.write(failed[x])
+                    if (x+1) < len(failed):
+                        v.write(",")
+            else:
+                v.write("N/A")
 
 #        if w.owm.is_API_online():
 #            v.erase(x=7, y=2, l=12)
@@ -67,7 +87,10 @@ def main():
 #                last_weather = datetime.datetime.now()
 #            v.write("{} C, {}".format(temp[0], temp[1]), x=7, y=2)
 
-        time.sleep(30)
+        if pb.get() == 0:
+            v.setDisplay(duration=dim_delay)
+
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     main()
