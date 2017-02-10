@@ -48,7 +48,7 @@ def main():
 #    w = Weather()
 #    last_weather = datetime.datetime.now()
 #    temp = w.get_temp()
-#    interval = datetime.timedelta(15*60)
+#    interval = datetime.timedelta(15*60) # Every 15 minutes
 #    v.write("Temp.: ...", x=0, y=2)
 
     i = 0
@@ -80,12 +80,15 @@ def main():
             else:
                 v.write("N/A")
 
-#        if w.owm.is_API_online():
-#            v.erase(x=7, y=2, l=12)
 #            if datetime.datetime.now() > (last_weather + interval):
-#                temp = w.get_temp(update=True)
-#                last_weather = datetime.datetime.now()
-#            v.write("{} C, {}".format(temp[0], temp[1]), x=7, y=2)
+#                if w.owm.is_API_online():
+#                    temp = w.get_temp(update=True)
+#                    last_weather = datetime.datetime.now()
+#                    v.erase(x=7, y=2, l=12)
+#                    try:
+#                        v.write("{}\xb2C".format(temp[0]), x=7, y=2)
+#                    except IndexError:
+#                        v.write("?\xb2C", x=7, y=2)
 
         if pb.get() == 0:
             v.setDisplay(duration=dim_delay)
