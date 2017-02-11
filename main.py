@@ -52,11 +52,14 @@ def main():
 #    v.write("Temp.: ...", x=0, y=2)
 
     i = 0
+    rr_normal = 300 # in 1/10s
+    rr_failed = 30 # in 1/10s
+    refresh_rate = rr_normal
     print "Nanny started, entering loop"
 
     while True:
         i += 1
-        if i >= 300:
+        if i >= refresh_rate:
             i = 0
             ok = 0
             failed = []
@@ -73,11 +76,13 @@ def main():
 
             if len(failed):
 #                v.setDisplay(duration=dim_delay)
+                refresh_rate = rr_failed
                 for x in range(len(failed)):
                     v.write(failed[x])
                     if (x+1) < len(failed):
                         v.write(",")
             else:
+                refresh_rate = rr_normal
                 v.write("N/A")
 
 #            if datetime.datetime.now() > (last_weather + interval):
