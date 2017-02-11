@@ -48,13 +48,15 @@ def main():
 #    w = Weather()
 #    last_weather = datetime.datetime.now()
 #    temp = w.get_temp()
-#    interval = datetime.timedelta(15*60) # Every 15 minutes
+#    interval = datetime.timedelta(minutes=15) # Every 15 minutes
 #    v.write("Temp.: ...", x=0, y=2)
 
     i = 0
     rr_normal = 300 # in 1/10s
     rr_failed = 30 # in 1/10s
     refresh_rate = rr_normal
+
+    vfd_on = False
     print "Nanny started, entering loop"
 
     while True:
@@ -94,6 +96,16 @@ def main():
 #                        v.write("{}\xb2C".format(temp[0]), x=7, y=2)
 #                    except IndexError:
 #                        v.write("?\xb2C", x=7, y=2)
+
+            now = datetime.datetime.now()
+            if (now.hour >= 6 and now.hour < 8) or (now.hour >= 20 and now.hour <= 22):
+                if not vfd_on:
+                    v.setDisplay(True)
+                    vfd_on = True
+            else:
+                if vfd_on:
+                    v.setDisplay(True, duration=dim_delay)
+                    vfd_on = False
 
         if pb.get() == 0:
             v.setDisplay(duration=dim_delay)
