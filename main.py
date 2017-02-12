@@ -7,6 +7,7 @@ from vfd import Vfd
 from ping import check_ping
 #from weather import Weather
 from acmepins import GPIO
+import o365_client
 
 v = Vfd()
 dim_delay = "\x01" # 1 minute delay
@@ -51,10 +52,12 @@ def main():
 #    interval = datetime.timedelta(minutes=15) # Every 15 minutes
 #    v.write("Temp.: ...", x=0, y=2)
 
-    i = 0
-    rr_normal = 300 # in 1/10s
-    rr_failed = 30 # in 1/10s
+    rr_cal = 36000 # in 1/10s (1 hour)
+    rr_normal = 300 # in 1/10s (30 sec)
+    rr_failed = 30 # in 1/10s (3 sec)
     refresh_rate = rr_normal
+    i = refresh_rate
+    j = rr_cal
 
     vfd_on = False
     print "Nanny started, entering loop"
@@ -62,7 +65,9 @@ def main():
     while True:
         i += 1
         if i >= refresh_rate:
+            print "Refreshing server status"
             i = 0
+            j += refresh_rate
             ok = 0
             failed = []
 
@@ -78,6 +83,7 @@ def main():
 
             if len(failed):
 #                v.setDisplay(duration=dim_delay)
+                print "Servers failed: {}".format(failed)
                 refresh_rate = rr_failed
                 for x in range(len(failed)):
                     v.write(failed[x])
@@ -100,14 +106,36 @@ def main():
             now = datetime.datetime.now()
             if (now.hour >= 6 and now.hour < 8) or (now.hour >= 20 and now.hour <= 22):
                 if not vfd_on:
+                    print "Scheduled VFD on"
                     v.setDisplay(True)
                     vfd_on = True
             else:
                 if vfd_on:
+                    print "Scheduled VFD off"
                     v.setDisplay(True, duration=dim_delay)
                     vfd_on = False
 
+        if j >= rr_cal:
+            print "Refreshing calendar"
+            j = 0
+            first_event = o365_client.Client().firstEvent
+            v.erase(x=0, y=2, l=19)
+            v.erase(x=0, y=3, l=19)
+            if first_event is not None:
+                hour = first_event.getStart().tm_hour - time.altzone/(60**2) - time.daylight
+                mins = first_event.getStart().tm_min
+                if mins > 0:
+                    v.write("1st event at {}:{}".format(hour, mins), x=0, y=2)
+                else:
+                    v.write("1st event at {}:00".format(hour), x=0, y=2)
+                v.write(u"{}".format(first_event.getSubject()[:20]), x=0, y=3)
+                print "Next event: {} @ {}:{}".format(first_event.getSubject(), hour, mins)
+
+            else:
+                print "No upcoming event in the next 24h"
+
         if pb.get() == 0:
+            print "Pushbutton pressed, turning VFD on for 1 minute"
             v.setDisplay(duration=dim_delay)
 
         time.sleep(0.1)
