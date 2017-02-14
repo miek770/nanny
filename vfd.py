@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import serial
+from unidecode import unidecode
 
 class Vfd:
     def __init__(self, port="/dev/ttyS1", baud=19200):
@@ -44,7 +45,7 @@ class Vfd:
 #        self.ser.write(message[:l])
         if x is not None and y is not None:
             self.move(x, y)
-        self.ser.write(message)
+        self.ser.write(unidecode(message))
 
     def erase(self, x, y, l):
         self.move(x+l, y)

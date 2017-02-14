@@ -1,1 +1,4 @@
 pyowm==2.6.1
+O365==0.9.5
+Unidecode==0.04.20
+acmepins==0.0.3

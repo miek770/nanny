@@ -61,6 +61,6 @@ class Client:
 #                print u"First event on the schedule: {} @ {}:00".format(first.getSubject(), hour)
 
         if first is not None:
-            return first.getSubject(), first.getStart()
+            return first
         else:
             return None
