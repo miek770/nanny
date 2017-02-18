@@ -107,7 +107,7 @@ def main(args):
     i = refresh_rate
 
     vfd_on = False
-    print u"Nanny lancé, début de la boucle"
+    print "Nanny started, entering loop"
 
     while True:
         i += 1
