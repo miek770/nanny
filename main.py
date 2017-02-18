@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import signal, time, sys, datetime, os
+import signal, time, sys, datetime, os, argparse
 import subprocess as sub
 
 from vfd import Vfd
 #from weather import Weather
 from acmepins import GPIO
-import o365_client
 
 # VFD configuration
 #===================
@@ -75,7 +74,7 @@ def check_ping(hostname):
 # Main loop
 #===========
 
-def main():
+def main(args):
     """Program initiation and main loop.
     """
     v.clear()
@@ -85,21 +84,26 @@ def main():
     v.write(u"Servers: ...", x=0, y=0)
     v.write(u"Failed: ...", x=0, y=1)
 
+    if not args.no_cal:
+        import o365_client
+        rr_cal = 36000 # in 1/10s (1 hour)
+        j = rr_cal
+    else:
+        print u"Exécution sans calendrier"
+
 #    w = Weather()
 #    last_weather = datetime.datetime.now()
 #    temp = w.get_temp()
 #    interval = datetime.timedelta(minutes=15) # Every 15 minutes
 #    v.write(u"Temp.: ...", x=0, y=2)
 
-    rr_cal = 36000 # in 1/10s (1 hour)
     rr_normal = 300 # in 1/10s (30 sec)
     rr_failed = 30 # in 1/10s (3 sec)
     refresh_rate = rr_normal
     i = refresh_rate
-    j = rr_cal
 
     vfd_on = False
-    print u"Nanny started, entering loop"
+    print u"Nanny lancé, début de la boucle"
 
     while True:
         i += 1
@@ -107,9 +111,12 @@ def main():
         if i >= refresh_rate:
 
             if check_wifi():
-                # Update servers status (pings)
+                if args.verbose:
+                    print u"Updating servers status (pings)"
+
                 i = 0
-                j += refresh_rate
+                if not args.no_cal:
+                    j += refresh_rate
                 ok = 0
                 failed = []
 
@@ -160,7 +167,7 @@ def main():
                     v.setDisplay(True, duration=dim_delay)
                     vfd_on = False
 
-        if j >= rr_cal:
+        if not args.no_cal and j >= rr_cal:
             if check_wifi():
                 print u"Refreshing calendar"
                 j = 0
@@ -189,5 +196,16 @@ def main():
         time.sleep(0.1)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Supervision serveurs et un peu plus")
+    parser.add_argument("-v",
+                        "--verbose",
+                        action="store_true",
+                        default=False,
+                        help=u"Imprime davantage d'information sur l'exécution du programme.")
+    parser.add_argument("--no-cal",
+                        action="store_true",
+                        default=False,
+                        help=u"Exécute le programme sans le calendrier Outlook365.")
+    args = parser.parse_args()
+    main(args)
 
