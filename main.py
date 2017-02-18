@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import signal, time, sys, datetime
+import signal, time, sys, datetime, os
 
 from vfd import Vfd
-from ping import check_ping
 #from weather import Weather
 from acmepins import GPIO
 import o365_client
@@ -38,6 +37,24 @@ pb = GPIO("PA24", "INPUT") # update button
 #pb = GPIO("PC17", "INPUT") # on board PB
 #pb.set_edge("falling", pb_handler)
 #print u"Started PB edge detection"
+
+def check_wifi():
+    """Check if we have an IP address on wlan0.
+    """
+    response = os.system("/sbin/ifconfig wlan0 | grep inet\ addr | wc -l")
+    if response == 1:
+        return True
+    else:
+        return False
+
+def check_ping(hostname):
+    """Check if "hostname" replies to a ping.
+    """
+    response = os.system("ping -c 1 " + hostname + " > /dev/null")
+    if response == 0:
+        return True
+    else:
+        return False
 
 def main():
     v.clear()
