@@ -71,6 +71,10 @@ def check_ping(hostname):
     else:
         return False
 
+def update_time():
+    now = datetime.datetime.now()
+    v.write(u"{}".format(now.strftime("%H:%M")), x=15, y=0)
+
 # Main loop
 #===========
 
@@ -109,6 +113,8 @@ def main(args):
         i += 1
 
         if i >= refresh_rate:
+
+            update_time()
 
             if check_wifi():
                 if args.verbose:
