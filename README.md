@@ -13,8 +13,6 @@ The ping-based monitoring and VFD work like a charm. The VFD goes to sleep 1 min
  - Le bouton fait fermer l'écran après une minute, même pendant la cédule
  - L'écran ne s'éteint pas après 22h
  - L'ouverture de face est trop petite et limite l'angle de vue
- - Le prochain rdz-vz est plate à voir le dimanche soir
  - remplacer l'ecran eteint par un ecran de veille avec l'heure, pas ex.
- - mettre une animation pour savoir que le programme n'est pas plantÃ©
+ - mettre une animation pour savoir que le programme n'est pas planté
  - faire des threads pour ce qui bloque?
- - detecter la perte de reseau
