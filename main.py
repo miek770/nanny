@@ -130,7 +130,7 @@ def main():
                 else:
                     v.write(u"1st event at {}:00".format(hour), x=0, y=2)
                 v.write(u"{}".format(first_event.getSubject()[:20]), x=0, y=3)
-                print u"Next event: {} @ {}:{}".format(first_event.getSubject(), hour, mins)
+#                print u"Next event: {} @ {}:{}".format(first_event.getSubject(), hour, mins)
 
             else:
                 print u"No upcoming event in the next 24h"
