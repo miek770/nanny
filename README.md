@@ -9,7 +9,6 @@ The ping-based monitoring and VFD work like a charm. The VFD goes to sleep 1 min
 ## To Do List
 
  - Raccourcir la 3e ligne
- - L'écran ne s'éteint pas après 22h
  - L'ouverture de face est trop petite et limite l'angle de vue
  - remplacer l'ecran eteint par un ecran de veille avec l'heure, pas ex. mettre une animation pour savoir que le programme n'est pas planté
  - faire des threads pour ce qui bloque? avec une animation de chargement?
