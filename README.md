@@ -12,3 +12,4 @@ The ping-based monitoring and VFD work like a charm. The VFD goes to sleep 1 min
  - L'ouverture de face est trop petite et limite l'angle de vue
  - remplacer l'ecran eteint par un ecran de veille avec l'heure, pas ex. mettre une animation pour savoir que le programme n'est pas planté
  - faire des threads pour ce qui bloque? avec une animation de chargement?
+ - The VFD erase function seems to not be able to delete the last character in a line. You need to send a backspace from a position but obviously if you start from column 20, you're going to erase column 19. I should instead write an empty char.
