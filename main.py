@@ -82,7 +82,7 @@ def main(args):
     """Program initiation and main loop.
     """
     v.clear()
-    v.setLineWrap(False)
+    v.setLineWrap(True)
     v.setBrightness(25)
     v.setDisplay(duration=dim_delay)
     v.write(u"Servers: ...", x=0, y=0)
@@ -93,7 +93,7 @@ def main(args):
         rr_cal = 36000 # in 1/10s (1 hour)
         j = rr_cal
     else:
-        print u"Exécution sans calendrier"
+        print u"Execution sans calendrier"
 
 #    w = Weather()
 #    last_weather = datetime.datetime.now()
@@ -207,11 +207,11 @@ if __name__ == "__main__":
                         "--verbose",
                         action="store_true",
                         default=False,
-                        help=u"Imprime davantage d'information sur l'exécution du programme.")
+                        help=u"Imprime davantage d'information sur l'execution du programme.")
     parser.add_argument("--no-cal",
                         action="store_true",
                         default=False,
-                        help=u"Exécute le programme sans le calendrier Outlook365.")
+                        help=u"Execute le programme sans le calendrier Outlook365.")
     args = parser.parse_args()
     main(args)
 
