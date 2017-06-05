@@ -37,7 +37,7 @@ print u"Initiated signals handlers"
 # Servers list
 #==============
 
-servers = (("bbbforum", u"bf"), ("bbbdata", u"bd"), ("odroid", u"od"), ("skymule", u"sm"))
+servers = (("bbbforum", u"bf"), ("bbbdata", u"bd"), ("odroid", u"od"), ("skymule", u"sm"), ("domdroid", u"dd"))
 
 # Pushbutton configuration
 #==========================

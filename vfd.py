@@ -28,6 +28,10 @@ class Vfd:
         self.coord.append("\x12")#17
         self.coord.append("\x13")#18
         self.coord.append("\x14")#19
+        self.coord.append("\x15")#20
+
+        self.width = 20
+        self.height = 4
 
         self.setRemember(True)
         self.setDisplay(True)
@@ -100,6 +104,11 @@ class Vfd:
             self.ser.write("\xFE\x44")
 
     def move(self, x, y):
+        if x > self.width:
+            x = self.width
+        if y > self.height:
+            y = self.height
+
         try:
             self.ser.write("\xFE\x47" + self.coord[x] + self.coord[y])
         except ValueError:
