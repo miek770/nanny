@@ -36,7 +36,7 @@ class Vfd:
         self.setRemember(True)
         self.setDisplay(True)
         self.setAutoScroll(False)
-        self.setLineWrap(False)
+        self.setLineWrap(True)
         self.blink(False)
 
     # Écrit le texte à l'endroit spécifié
@@ -49,7 +49,10 @@ class Vfd:
 #        self.ser.write(message[:l])
         if x is not None and y is not None:
             self.move(x, y)
-        self.ser.write(unidecode(message))
+        if message.__class__ is unicode:
+            self.ser.write(unidecode(message))
+        else:
+            self.ser.write(message)
 
     def erase(self, x, y, l):
         self.move(x+l, y)
