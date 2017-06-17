@@ -134,6 +134,7 @@ def main(args):
 
                 v.write(u"{}/{}".format(ok, len(servers)), x=9, y=0)
                 v.erase(x=20, y=1, l=13)
+                v.erase(x=20, y=2, l=20)
                 v.move(x=8, y=1)
 
                 if len(failed):
